@@ -35,14 +35,14 @@ Run Brave inside a Linux container on macOS using XQuartz for X11 display forwar
   open -a XQuartz
   ```
 4. **Copy .xinitrc and .Xmodmap files**
-  These files auto-configure XQuartz on startup: `.xinitrc` allows localhost X11, sets your keyboard layout, applies `.Xmodmap`, and keeps 
-  the session running; `.Xmodmap` resets modifiers and maps both Command keys (Meta_L/Meta_R) to be the only Control keys so ⌘ acts like 
-  Ctrl in all X11 clients. If your layout isn’t Turkish, replace `-layout tr` in `.xinitrc` (you can check the current X11 layout with 
-  `setxkbmap -query | grep layout`, or use `us`, `gb`, etc.).
+- These files auto-configure XQuartz on startup: `.xinitrc` allows localhost X11, 
+- sets your keyboard layout, applies `.Xmodmap`, and keeps the session running; 
+- `.Xmodmap` resets modifiers and maps both Command keys (Meta_L/Meta_R) to be the only Control keys so ⌘ acts like Ctrl in all X11 clients. 
+- If your layout isn’t Turkish, replace `-layout tr` in `.xinitrc` (you can check the current X11 layout with `setxkbmap -query | grep layout`, or use `us`, `gb`, etc.).
   ```bash
   cp .xinitrc .Xmodmap $HOME/
   ```
-1. **Open an XQuartz terminal (xterm)**
+5. **Open an XQuartz terminal (xterm)**
 - With XQuartz running, menu bar -> Applications -> Terminal
 - Run the following **inside the XQuartz xterm**:
   -  Generate X11 cookies (recommended)
@@ -50,7 +50,7 @@ Run Brave inside a Linux container on macOS using XQuartz for X11 display forwar
    xauth generate :0 . trusted 2>/dev/null || true
    xauth list :0
    ```
-1. **Build the container image**
+6. **Build the container image**
   ```bash
   podman build -t brave-docker .
   ```
