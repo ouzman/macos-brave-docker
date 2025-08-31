@@ -34,19 +34,23 @@ Run Brave inside a Linux container on macOS using XQuartz for X11 display forwar
   killall XQuartz 2>/dev/null || true
   open -a XQuartz
   ```
-4. **Open an XQuartz terminal (xterm)**
+4. **Copy .xinitrc and .Xmodmap files**
+  These files auto-configure XQuartz on startup: `.xinitrc` allows localhost X11, sets your keyboard layout, applies `.Xmodmap`, and keeps 
+  the session running; `.Xmodmap` resets modifiers and maps both Command keys (Meta_L/Meta_R) to be the only Control keys so ⌘ acts like 
+  Ctrl in all X11 clients. If your layout isn’t Turkish, replace `-layout tr` in `.xinitrc` (you can check the current X11 layout with 
+  `setxkbmap -query | grep layout`, or use `us`, `gb`, etc.).
+  ```bash
+  cp .xinitrc .Xmodmap $HOME/
+  ```
+1. **Open an XQuartz terminal (xterm)**
 - With XQuartz running, menu bar -> Applications -> Terminal
 - Run the following **inside the XQuartz xterm**:
-   1. Allow connections from localhost
-   ```bash
-   /opt/X11/bin/xhost +localhost
-   ```
-   2. Generate X11 cookies (recommended)
+  -  Generate X11 cookies (recommended)
    ```bash
    xauth generate :0 . trusted 2>/dev/null || true
    xauth list :0
    ```
-5. **Build the container image**
+1. **Build the container image**
   ```bash
   podman build -t brave-docker .
   ```
@@ -61,9 +65,11 @@ mkdir -p ./brave-profile
 
 podman run --rm -it \
   --name brave \
+  --shm-size=1g \
   -e DISPLAY=host.containers.internal:0 \
+  -e XDG_RUNTIME_DIR=/tmp/runtime-brave \
   -v "$HOME/.Xauthority:/home/brave/.Xauthority" \
-  -v "$(pwd)/brave-profile:/home/brave/.config/BraveSoftware/Brave-Browser" \
+  -v "$(pwd)/brave-profile:/home/brave/.config/BraveSoftware/Brave-Browser:Z" \
   brave-docker
 ```
 
@@ -71,8 +77,12 @@ podman run --rm -it \
 - The image's default command includes `--disable-gpu`. This avoids common GPU issues with XQuartz. You can append extra flags, for example:
   ```bash
   podman run --rm -it \
+    --name brave \
+    --shm-size=1g \
     -e DISPLAY=host.containers.internal:0 \
+    -e XDG_RUNTIME_DIR=/tmp/runtime-brave \
     -v "$HOME/.Xauthority:/home/brave/.Xauthority" \
+    -v "$(pwd)/brave-profile:/home/brave/.config/BraveSoftware/Brave-Browser:Z" \
     brave-docker --no-first-run --incognito
   ```
 
