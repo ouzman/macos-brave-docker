@@ -1,0 +1,19 @@
+! --- reset modifiers ---
+clear shift
+clear lock
+clear control
+clear mod1
+clear mod2
+clear mod3
+clear mod4
+clear mod5
+
+! --- defaults you still want ---
+add shift   = Shift_L Shift_R
+add lock    = Caps_Lock
+add mod1    = Alt_L Alt_R Mode_switch
+add mod2    = Num_Lock
+add mod5    = ISO_Level3_Shift
+
+! --- make Command (Meta_L, Meta_R) be the ONLY Control keys (exactly 2 keys) ---
+add control = Meta_L Meta_R
